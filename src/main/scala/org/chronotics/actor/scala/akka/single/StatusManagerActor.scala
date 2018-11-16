@@ -45,7 +45,6 @@ class StatusManagerActor extends Actor with ActorLogging {
 
     kafkaProducer.send(record, new Callback {
       override def onCompletion(recordMetadata: RecordMetadata, ex: Exception): Unit = {
-        //log.info("Completed message: {} {}", recordMetadata, (if (ex == null) "" else " - ex: " + ex));
       }
     })
 
