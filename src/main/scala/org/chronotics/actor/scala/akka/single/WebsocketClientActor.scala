@@ -21,12 +21,10 @@ class WebsocketClientActor(room: ActorRef) extends Actor with ActorLogging {
 
     {
       case IncomingMessage(text) => {
-        log.debug("New incoming msg: {}", text)
         room ! WSMessage(text)
       }
 
       case WSMessage(text) => {
-        log.debug("New outgoing msg: {}", text)
         outgoing ! OutgoingMessage(text)
       }
     }
