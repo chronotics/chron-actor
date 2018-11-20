@@ -34,7 +34,17 @@ class InitProcessActor extends Actor with ActorLogging {
   val isJavaCmd = config.getInt("java_exec.is_java")
   val strConfigDirPOM = config.getString("configdir.pom").replace("[PREFIX]", strPrefix)
   val strMavenDir = config.getString("maven.dir").replace("[PREFIX]", strPrefix)
-  val strJavaExecCp = config.getString("java_exec.cp").replace("[PREFIX]", strPrefix)
+  //val strJavaExecCp = config.getString("java_exec.cp").replace("[PREFIX]", strPrefix)
+  val strJavaExecWorkflowCp = config.getString("java_exec.workflow_jar").replace("[PREFIX]", strPrefix)
+  val strJavaMainWorkflowClass = config.getString("java_exec.workflow_main")
+  val strJavaExecLibraryCp = config.getString("java_exec.library_jar").replace("[PREFIX]", strPrefix)
+  val strJavaMainLibraryClass = config.getString("java_exec.library_main")
+  val strJavaExecRouterCp = config.getString("java_exec.router_jar").replace("[PREFIX]", strPrefix)
+  val strJavaMainRouterClass = config.getString("java_exec.router_main")
+  val strJavaExecHttpCp = config.getString("java_exec.http_jar").replace("[PREFIX]", strPrefix)
+  val strJavaMainHttpClass = config.getString("java_exec.http_main")
+  val strJavaExecConsumerCp = config.getString("java_exec.consumer_jar").replace("[PREFIX]", strPrefix)
+  val strJavaMainConsumerClass = config.getString("java_exec.consumer_main")
   val strSQLiteURL = config.getString("sqlitedb.url").replace("[PREFIX]", strPrefix)
   val strLogbackPath = config.getString("logback.path").replace("[PREFIX]", strPrefix)
   val intLimitNumAlib = config.getInt("alibrouterhandler.num-init")
@@ -103,7 +113,7 @@ class InitProcessActor extends Actor with ActorLogging {
           if (isJavaCmd == 0) {
             curCmd = strMavenDir + "mvn -f " + strConfigDirPOM + " exec:java -Dexec.mainClass=brique.z2.manage.KafkaConsumerApp"
           } else {
-            curCmd = strJavaCmd + strJavaExecCp + " brique.z2.manage.KafkaConsumerApp";
+            curCmd = strJavaCmd + strJavaExecConsumerCp + " " + strJavaMainConsumerClass
           }
 
           arrProcessCmnd = arrProcessCmnd :+ curCmd
@@ -118,7 +128,7 @@ class InitProcessActor extends Actor with ActorLogging {
             if (isJavaCmd == 0) {
               curCmd = strMavenDir + "mvn -f " + strConfigDirPOM + " exec:java -Dexec.mainClass=brique.z2.route.RouteActorApp -Dexec.args=alib"
             } else {
-              curCmd = strJavaCmd + strJavaExecCp + " brique.z2.route.RouteActorApp alib";
+              curCmd = strJavaCmd + strJavaExecRouterCp + " " + strJavaMainRouterClass + " alib"
             }
 
             arrProcessCmnd = arrProcessCmnd :+ curCmd
@@ -128,25 +138,7 @@ class InitProcessActor extends Actor with ActorLogging {
             if (isJavaCmd == 0) {
               curCmd = strMavenDir + "mvn -f " + strConfigDirPOM + " exec:java -Dexec.mainClass=brique.z2.route.RouteActorApp -Dexec.args=workflowinfo"
             } else {
-              curCmd = strJavaCmd + strJavaExecCp + " brique.z2.route.RouteActorApp workflowinfo";
-            }
-
-            arrProcessCmnd = arrProcessCmnd :+ curCmd
-          }
-
-          if (init.id == "0") {
-            if (isJavaCmd == 0) {
-              curCmd = strMavenDir + "mvn -f " + strConfigDirPOM + " exec:java -Dexec.mainClass=brique.z2.route.RouteActorApp -Dexec.args=debug"
-            } else {
-              curCmd = strJavaCmd + strJavaExecCp + " brique.z2.route.RouteActorApp debug";
-            }
-
-            arrProcessCmnd = arrProcessCmnd :+ curCmd
-
-            if (isJavaCmd == 0) {
-              curCmd = strMavenDir + "mvn -f " + strConfigDirPOM + " exec:java -Dexec.mainClass=brique.z2.route.RouteActorApp -Dexec.args=osproc"
-            } else {
-              curCmd = strJavaCmd + strJavaExecCp + " brique.z2.route.RouteActorApp osproc";
+              curCmd = strJavaCmd + strJavaExecRouterCp + " " + strJavaMainRouterClass + " workflowinfo"
             }
 
             arrProcessCmnd = arrProcessCmnd :+ curCmd
@@ -158,7 +150,7 @@ class InitProcessActor extends Actor with ActorLogging {
           if (isJavaCmd == 0) {
             curCmd = strMavenDir + "mvn -f " + strConfigDirPOM + " exec:java -Dexec.mainClass=brique.z2.proc.ProcessActorApp -Dexec.args=" + strPort + ",0"
           } else {
-            curCmd = strJavaCmd + strJavaExecCp + " brique.z2.proc.ProcessActorApp " + strPort + ",0"
+            curCmd = strJavaCmd + strJavaExecWorkflowCp + " " + strJavaMainWorkflowClass + " " + strPort + ",0"
           }
 
           arrProcessCmnd = arrProcessCmnd :+ curCmd
@@ -169,7 +161,7 @@ class InitProcessActor extends Actor with ActorLogging {
           if (isJavaCmd == 0) {
             curCmd = strMavenDir + "mvn -f " + strConfigDirPOM + " exec:java -Dexec.mainClass=brique.z2.alib.AlibTaskActorApp -Dexec.args=" + strPort + ",0,R"
           } else {
-            curCmd = strJavaCmd + strJavaExecCp + " brique.z2.alib.AlibTaskActorApp " + strPort + ",0,R"
+            curCmd = strJavaCmd + strJavaExecLibraryCp + " " + strJavaMainLibraryClass + " " + strPort + ",0,R"
           }
 
           arrProcessCmnd = arrProcessCmnd :+ curCmd
@@ -244,7 +236,7 @@ class InitProcessActor extends Actor with ActorLogging {
                   if (isJavaCmd == 0) {
                     curCmd = strMavenDir + "mvn -f " + strConfigDirPOM + " exec:java -Dexec.mainClass=brique.z2.alib.AlibTaskActorApp -Dexec.args=" + strPort + "," + item._1 + "," + curLang
                   } else {
-                    curCmd = strJavaCmd + strJavaExecCp + " brique.z2.alib.AlibTaskActorApp " + strPort + "," + item._1 + "," + curLang
+                    curCmd = strJavaCmd + strJavaExecLibraryCp + " " + strJavaMainLibraryClass + " " + strPort + "," + item._1 + "," + curLang
                   }
 
                   arrProcessCmnd = arrProcessCmnd :+ curCmd
@@ -253,7 +245,7 @@ class InitProcessActor extends Actor with ActorLogging {
                     if (isJavaCmd == 0) {
                       curCmd = strMavenDir + "mvn -f " + strConfigDirPOM + " exec:java -Dexec.mainClass=brique.z2.alib.AlibTaskActorApp -Dexec.args=0," + item._1 + "," + curLang
                     } else {
-                      curCmd = strJavaCmd + strJavaExecCp + " brique.z2.alib.AlibTaskActorApp 0," + item._1 + "," + curLang
+                      curCmd = strJavaCmd + strJavaExecLibraryCp + " " + strJavaMainLibraryClass + " 0," + item._1 + "," + curLang
                     }
 
                     arrProcessCmnd = arrProcessCmnd :+ curCmd
@@ -280,7 +272,7 @@ class InitProcessActor extends Actor with ActorLogging {
                 if (isJavaCmd == 0) {
                   curCmd = strMavenDir + "mvn -f " + strConfigDirPOM + " exec:java -Dexec.mainClass=brique.z2.proc.ProcessActorApp -Dexec.args=" + strPort + "," + item.id
                 } else {
-                  curCmd = strJavaCmd + strJavaExecCp + " brique.z2.proc.ProcessActorApp " + strPort + "," + item.id
+                  curCmd = strJavaCmd + strJavaExecWorkflowCp + " " + strJavaMainWorkflowClass + " " + strPort + "," + item.id
                 }
 
                 arrProcessCmnd = arrProcessCmnd :+ curCmd
@@ -498,7 +490,7 @@ class InitProcessActor extends Actor with ActorLogging {
       if (isNohup == 1) {
         if (strCmd == "http") {
           var curCmd = ""
-          curCmd = "java -cp " + strJavaExecCp + " brique.z2.conn.HttpActorApp"
+          curCmd = "java -cp " + strJavaExecHttpCp + " " + strJavaMainHttpClass
           log.info("Begin Http Actor")
 
           createBashFile(curCmd, "HttpActorApp", "")
@@ -807,7 +799,7 @@ class InitProcessActor extends Actor with ActorLogging {
 
       if (strCmd == "http") {
         var curCmd = ""
-        curCmd = "setsid java -cp " + strJavaExecCp + " brique.z2.conn.HttpActorApp </dev/null &>/dev/null &"
+        curCmd = "setsid java -cp " + strJavaExecHttpCp + " " + strJavaMainHttpClass + " </dev/null &>/dev/null &"
         log.info("Begin Http Actor")
 
         val objProcess = Process(curCmd.trim())

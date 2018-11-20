@@ -467,9 +467,10 @@ class LibraryActor(strLibType: String, strLang: String, pID: Int, objREngine: RE
 
           val strPrefix = EnvConfig.getPrefix()
           val strLogbackPath = config.getString("logback.path").replace("[PREFIX]", strPrefix)
-          val strJavaExecCp = config.getString("java_exec.cp").replace("[PREFIX]", strPrefix)
+          val strJavaExecCp = config.getString("java_exec.lang_jar").replace("[PREFIX]", strPrefix)
+          val strJavaMainClass = config.getString("java_exec.lang_main")
           var strJavaCmd = "java -Dlogback.configurationFile=" + strLogbackPath + " -cp "
-          var strCmd = strJavaCmd + strJavaExecCp + " brique.z2.engine.lang.LangEngineApp " + strCmdParam.toString
+          var strCmd = strJavaCmd + strJavaExecCp + " " + strJavaMainClass + " " + strCmdParam.toString
 
           log.info("Cmd: " + strCmd)
 
