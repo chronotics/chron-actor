@@ -12,7 +12,7 @@
         <repository>
             <id>brique-server</id>
             <name>Brique Repositories</name>
-            <url>http://www.brique.co.kr:8081/nexus/content/groups/brique/</url>
+            <url>http://inside.brique.co.kr:8081/nexus/content/groups/brique/</url>
         </repository>
     </repositories>
 
@@ -20,7 +20,7 @@
         <repository>
             <id>brique-snapshot</id>
             <name>Brique Repositories</name>
-            <url>http://www.brique.co.kr:8081/nexus/content/repositories/brique-snapshot/</url>
+            <url>http://inside.brique.co.kr:8081/nexus/content/repositories/brique-snapshot/</url>
         </repository>
     </distributionManagement>
 
